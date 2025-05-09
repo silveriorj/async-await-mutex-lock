@@ -64,7 +64,7 @@ export class Lock<T> {
             this.waitingMap.delete(key);
           }
 
-          this._acquiredMap.set(key, false);
+          this._acquiredMap.delete(key);
         }
       }
     }
