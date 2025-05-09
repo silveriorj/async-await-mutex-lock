@@ -77,6 +77,7 @@ describe("Lock Tests", () => {
 
     await Promise.all([test(key), test(key), test(key)]);
   })
+
   it("cleans up _acquiredMap when lock is released", async () => {
     let lock = new Lock<string>();
     let key = "key";
@@ -85,14 +86,12 @@ describe("Lock Tests", () => {
     await lock.acquire(key);
     expect(lock.isAcquired(key)).toBe(true);
 
-    // Release the lock for the key
+    const acquiredMap = (lock as any)._acquiredMap;
+    expect(acquiredMap.has(key)).toBe(true);
+
     lock.release(key);
     expect(lock.isAcquired(key)).toBe(false);
 
-    // Check if the key is removed from _acquiredMap
-    // This requires accessing the private _acquiredMap via a workaround
-    // (e.g., casting to `any` or using a helper method if available)
-    const acquiredMap = (lock as any)._acquiredMap;
     expect(acquiredMap.has(key)).toBe(false);
   })
 })
